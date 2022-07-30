@@ -17,25 +17,14 @@ def main():
     while True:
         oled.fill(0)
         
-        channel = 0
-
-        # display the input values
-        #display.text('Hello World', 0, 0, 1)    # draw some text at x=0, y=0, colour=1
-        # oled.text(f"ain: {ain.read_voltage():5.2f}v ch:{channel}", 2, 3, 1)
+        spacing = 10
+        oled.text(" v < k1  k2 > v",0,spacing *0)        
+        oled.text(f" {din1.value()} {b1.value()} {int(k1.percent()*99):2d}  {int(k2.percent()*99):2d} {b2.value()} {din2.value()}", 0, spacing *1, 1)
+        oled.text(" m1  m2  m3  m4",0,spacing *2)        
+        oled.text(f"k{int(mks[0].percent()*99):2d}  {int(mks[1].percent()*99):2d}  {int(mks[2].percent()*99):2d}  {int(mks[3].percent()*99):2d}",0,spacing *3)        
+        oled.text(f"a{int(mas[0].percent()*99):2d}  {int(mas[1].percent()*99):2d}  {int(mas[2].percent()*99):2d}  {int(mas[3].percent()*99):2d}",0,spacing *4)        
+        oled.text(f"v{int(mas[0].read_voltage()):2d}  {int(mas[1].read_voltage()):2d}  {int(mas[2].read_voltage()):2d}  {int(mas[3].read_voltage()):2d}",0,spacing *5)        
         
-        # oled.text(f"k1: {k1.read_position():2}  k2: {k2.read_position():2}", 2, 13, 1)
-        # oled.text(f"d1{din2.value()} b1{b1.value()} b2{b2.value()} d2{din.value()}", 2, 23, 1)
-        # oled.text(f"Ks:{mk1.read_position():2} {mk2.read_position():2} {mk3.read_position():2} {mk4.read_position():2}", 2, 33, 1)
-        # oled.text(f"As:{ma1.read_voltage():5.2f} {ma2.read_voltage():5.2f}", 2, 43, 1)
-        # oled.text(f"As:{ma3.read_voltage():5.2f} {ma4.read_voltage():5.2f}", 2, 53, 1)
-
-        oled.text(f"1:{int(k1.percent()*100)} {mas[0].read_voltage():5.2f}", 0, 13, 1)
-        oled.text(f"2:{int(k2.percent()*100)} {mas[1].read_voltage():5.2f}", 0, 23, 1)
-        oled.text(f"3:{int(mks[0].percent()*100)} {mas[2].read_voltage():5.2f}", 0, 33, 1)
-        oled.text(f"4:{int(mks[1].percent()*100)} {mas[3].read_voltage():5.2f}", 0, 43, 1)
-        oled.text(f"5:{int(mks[2].percent()*100)} {din1.value()}", 0, 53, 1)
-        oled.text(f"6:{int(mks[3].percent()*100)} {din2.value()}", 0, 63, 1)
-
 
         cvs[0].voltage(int(k1.percent()*10))
         cvs[1].voltage(int(k2.percent()*10))
@@ -45,7 +34,7 @@ def main():
         cvs[5].voltage(int(mks[3].percent()*10))
 
         # show the screen boundaries
-        oled.rect(0, 0, OLED_WIDTH, OLED_HEIGHT, 1)
+        # oled.rect(0, 0, OLED_WIDTH, OLED_HEIGHT, 1)
         oled.show()
 
         sleep(0.1)
