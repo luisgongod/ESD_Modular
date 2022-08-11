@@ -55,7 +55,8 @@ class HarmonicLFOs(EuroPiScript):
 
     def get_delay_increment_value(self):
         """Calculate the wait time between degrees"""
-        delay = (0.1 - (k1.read_position(100, 1)/1000)) + (ain.read_voltage(1)/100)
+        # delay = (0.1 - (k1.read_position(100, 1)/1000)) + (ain.read_voltage(1)/100)
+        delay = (0.1 - (k1.read_position(100, 1)/1000)) 
         return delay, round((((1/delay)-10)/1)+1)
 
     def increment_selection(self):
@@ -207,13 +208,13 @@ class HarmonicLFOs(EuroPiScript):
         self.divisions[2] = mks[1].choice(self.DIVSISION_CHOICES)
         self.divisions[3] = mks[2].choice(self.DIVSISION_CHOICES)
         self.divisions[4] = mks[3].choice(self.DIVSISION_CHOICES)
-        self.divisions[5] = 16
+        self.divisions[5] = k2.read_position(16)+1
 
 
         # if self.clock_division != self.selected_lfo_start_value:
-        #     self.selected_lfo_start_value = self.clock_division 
-        #     self.divisions[self.selected_lfo] = self.clock_division
-        #     self.save_state()
+            # self.selected_lfo_start_value = self.clock_division 
+            # self.divisions[self.selected_lfo] = self.clock_division
+            # self.save_state()
         
 
     def main(self):
