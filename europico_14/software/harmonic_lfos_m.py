@@ -129,9 +129,11 @@ class HarmonicLFOs(EuroPiScript):
             oled.vline(position + 9,24,8,1)
             oled.hline(position + 9,31,6,1)
             oled.vline(position + 15,24,8,1)
-        elif shape == 3: #Off
-            oled.line(position + 3,24,position + 15,31,1)
-            oled.line(position + 15,24,position + 3,31,1)
+        elif shape == 3: #Ramp
+            oled.vline(position + 3,24 ,8,1)
+            oled.line( position + 3 ,24 ,position + 9,31,1)
+            oled.vline(position + 9 ,24 ,8,1)
+            oled.line( position + 9 ,24 ,position + 15,31,1)
         elif shape == 4: #Random(ish)
             oled.pixel(position + 3,29,1)
             oled.pixel(position + 4,28,1)
@@ -151,7 +153,7 @@ class HarmonicLFOs(EuroPiScript):
             oled.pixel(position + 14,28,1)
             oled.pixel(position + 14,29,1)
             oled.pixel(position + 15,30,1)
-            oled.pixel(position + 16,30,1)
+            oled.pixel(position + 16,30,1)        
         
     def display_selected_lfo(self,lfo=0):
         """Draw the current LFO's number and division to the OLED display"""
@@ -185,7 +187,7 @@ class HarmonicLFOs(EuroPiScript):
         elif lfo_mode == 2: #Square
             voltage = MAX_VOLTAGE * (int((degree_three_sixty / (three_sixty)) * MAX_VOLTAGE) < (MAX_VOLTAGE/2))
         elif lfo_mode == 3: #Off
-            voltage = 0
+            voltage = MAX_VOLTAGE -((degree_three_sixty / (three_sixty)) * MAX_VOLTAGE)
         elif lfo_mode == 4: #Random(ish). This is NOT actually random, it is the sum of 3 out of sync sine waves, but it produces a flucutating voltage that is near impossible to predict over time, and which can be clocked to be in time
             voltage = ((((0-(cos(self.rad*(1/multiplier)))+1)) * (MAX_VOLTAGE/2)) / 3) + ((((0-(cos(self.rad*(1/(multiplier*2.3))))+1)) * (MAX_VOLTAGE/2)) / 3) + ((((0-(cos(self.rad*(1/(multiplier*5.6))))+1)) * (MAX_VOLTAGE/2)) / 3)
         return voltage
@@ -204,11 +206,11 @@ class HarmonicLFOs(EuroPiScript):
         self.clock_division = self.get_clock_division()
 
         self.divisions[0] = 1
-        self.divisions[1] = mks[0].choice(self.DIVSISION_CHOICES)
-        self.divisions[2] = mks[1].choice(self.DIVSISION_CHOICES)
-        self.divisions[3] = mks[2].choice(self.DIVSISION_CHOICES)
-        self.divisions[4] = mks[3].choice(self.DIVSISION_CHOICES)
-        self.divisions[5] = k2.read_position(16)+1
+        self.divisions[1] = mks[0].read_position(MAX_HARMONIC)+1
+        self.divisions[2] = mks[1].read_position(MAX_HARMONIC)+1
+        self.divisions[3] = mks[2].read_position(MAX_HARMONIC)+1
+        self.divisions[4] = mks[3].read_position(MAX_HARMONIC)+1
+        self.divisions[5] = k2.read_position(MAX_HARMONIC)+1
 
 
         # if self.clock_division != self.selected_lfo_start_value:
