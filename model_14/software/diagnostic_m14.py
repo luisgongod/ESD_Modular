@@ -6,7 +6,7 @@ Modified from diagnotic.py to be used with the model_14 board.
 # from machine import ADC
 from time import sleep
 from machine import Pin
-from europi_m import OLED_HEIGHT, OLED_WIDTH, b1, b2, cvs, k1, k2, oled ,mas, mks,din1,din2,MAX_UINT16
+from europi_m14 import OLED_HEIGHT, OLED_WIDTH, b1, b2, cvs, k1, k2, oled ,mas, mks,din1,din2,MAX_UINT16
 
 # from europi_script import EuroPiScript
 LOW = 0

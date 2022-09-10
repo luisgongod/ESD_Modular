@@ -1,4 +1,4 @@
-# Model 14
+# Model 15
 
 Programable Eurorack module Remix of by Allen-Synthesis' [EuroPi](https://github.com/Allen-Synthesis/EuroPi).
 
