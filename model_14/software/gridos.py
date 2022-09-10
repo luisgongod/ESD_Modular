@@ -1,4 +1,4 @@
-from europi_m import *
+from europi_m14 import *
 import machine
 from time import ticks_diff, ticks_ms
 from random import randint, uniform
