@@ -28,7 +28,7 @@ else:
     #Output calibration values for Europi_dev board should be calculated the same way as calibration.py for Europi board
 
 try:
-    from calibration_values_m import INPUT_CALIBRATION_VALUES, INPUT_CALIBRATION_VALUES_2, INPUT_CALIBRATION_VALUES_3, INPUT_CALIBRATION_VALUES_4
+    from calibration_values_m14 import INPUT_CALIBRATION_VALUES, INPUT_CALIBRATION_VALUES_2, INPUT_CALIBRATION_VALUES_3, INPUT_CALIBRATION_VALUES_4
 except ImportError:        
     INPUT_CALIBRATION_VALUES=[65139,58626,52114,45601,39089,32576,26063,19551,13038,6526,13]
     INPUT_CALIBRATION_VALUES_2= INPUT_CALIBRATION_VALUES
@@ -36,7 +36,7 @@ except ImportError:
     INPUT_CALIBRATION_VALUES_4= INPUT_CALIBRATION_VALUES
 
 try:
-    from calibration_values_m import OUTPUT_CALIBRATION_VALUES    
+    from calibration_values_m14 import OUTPUT_CALIBRATION_VALUES    
 except ImportError:
     OUTPUT_CALIBRATION_VALUES = [
         0,
