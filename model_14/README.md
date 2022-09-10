@@ -6,7 +6,7 @@ Programable Eurorack module inspired by Allen-Synthesis' [EuroPi](https://github
 
 ## Description
 
-Thid module is based on the schematics of the EuroPi, the main differences are:
+This module is based on the schematics of the EuroPi, the main differences are:
 
 - 7 extra Analogue inputs thanks to a multiplexer
 - Larger 128x64 Oled display
