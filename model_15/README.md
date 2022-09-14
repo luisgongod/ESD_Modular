@@ -16,7 +16,7 @@ This module is fully compatible with all Europi [scripts](https://github.com/All
 
 ## Get your own
 
-Under `hardwared` you can find the gerbers and BOM files. This gerber was done to be printed in one go, a v-cut is used to separate both pcnbs. Be careful about it when ordering.
+Under `hardwared` you can find the gerbers and BOM files. This gerber was done to be printed in one go, a v-cut is used to separate both pcnbs. Be careful about it when ordering. Exported files to `altium` are also included but _atention_ these were not verified (i dont have altium)
 
 <img src="./docs/back.jpg" width="480" >
 
