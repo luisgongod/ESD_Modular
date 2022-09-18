@@ -1,3 +1,3 @@
-# Signal Modular Devices
+# ESD Modular
 
 Main repo for my own Eurorack modules 
