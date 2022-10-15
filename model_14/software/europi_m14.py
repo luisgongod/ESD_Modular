@@ -595,6 +595,68 @@ class MuxKnob():
         self.mux.set_channel(self.channel)        
         return self._knob.choice(choices)
 
+class MuxKnobAnalogInput():
+    """special super class to use knob-analog input pair as cv. So one pair controls one parameter 
+        Modes are: 
+        absolute: knob and analog input values are added together
+        subtract: knob value is subtracted from analog input value 
+        average: knob and analog input values are added together and divided by 2
+        max: knob and analog input values are compared and the max value is used
+        min: knob and analog input values are compared and the min value is used
+        modulated: knob and analog input values are multiplied together
+
+        all values are clamp to the max and min values allowed
+        
+    """
+    def __init__(self, muxknob, muxanaloginput, mode="absolute"):
+        self.knob = muxknob
+        self.analoginput = muxanaloginput
+        self.MODES = ["absolute","subtract","average","max","min","modulated"]
+        self.mode = mode 
+
+    def percent(self):
+        if self.mode == "absolute":
+            return clamp(self.analoginput.percent() + self.knob.percent(),0,1)
+        elif self.mode == "average":
+            return (self.analoginput.percent() + self.knob.percent())/2
+        elif self.mode == "max":
+            return max(self.analoginput.percent(), self.knob.percent())
+        elif self.mode == "min":
+            return min(self.analoginput.percent(), self.knob.percent())
+        elif self.mode == "modulated":
+            return clamp(self.analoginput.percent() * self.knob.percent(),0,1)      
+        else:
+            raise ValueError("Mode not implemented")
+    
+    def read_position(self,steps=100):
+        if self.mode == "absolute":
+            return clamp(self.analoginput.read_position() + self.knob.read_position(),0,steps)
+        elif self.mode == "average":
+            return (self.analoginput.read_position() + self.knob.read_position())/2
+        elif self.mode == "max":
+            return max(self.analoginput.read_position(), self.knob.read_position())
+        elif self.mode == "min":
+            return min(self.analoginput.read_position(), self.knob.read_position())
+        elif self.mode == "modulated":
+            return clamp(self.analoginput.read_position() * self.knob.read_position(),0,steps)
+        else:
+            raise ValueError("Mode not implemented")
+    
+    def choice(self, choices):
+        if self.mode == "absolute":
+            return choices[clamp(self.analoginput.read_position() + self.knob.read_position(),0,len(choices)-1)]
+        elif self.mode == "average":
+            return choices[int((self.analoginput.read_position() + self.knob.read_position())/2)]
+        elif self.mode == "max":
+            return choices[max(self.analoginput.read_position(), self.knob.read_position())]
+        elif self.mode == "min":
+            return choices[min(self.analoginput.read_position(), self.knob.read_position())]
+        elif self.mode == "modulated":
+            return choices[clamp(self.analoginput.read_position() * self.knob.read_position(),0,len(choices)-1)]
+        else:
+            raise ValueError("Mode not implemented")
+
+
 # Define all the I/O using the appropriate class and with the pins used
 
 m0 = Mux(26,7,8,9)
@@ -607,12 +669,18 @@ mk4 = MuxKnob(m0,0)
 mks = [mk1,mk2,mk3,mk4]
 
 #AnalogIn channels (left to right) 5,7,4,6 
-#TODO: Invert in HW!
 ma1 = MuxAnalogueInput(m0,5,INPUT_CALIBRATION_VALUES, 0,10)
 ma2 = MuxAnalogueInput(m0,7,INPUT_CALIBRATION_VALUES_2, 0,10)
 ma3 = MuxAnalogueInput(m0,4,INPUT_CALIBRATION_VALUES_3, -5,5)
 ma4 = MuxAnalogueInput(m0,6,INPUT_CALIBRATION_VALUES_4, -5,5)
 mas = [ma1,ma2,ma3,ma4]
+
+#Knob-AnalogIn channels 
+mka1 = MuxKnobAnalogInput(mk1,ma1)
+mka2 = MuxKnobAnalogInput(mk2,ma2)
+mka3 = MuxKnobAnalogInput(mk3,ma3)
+mka4 = MuxKnobAnalogInput(mk4,ma4)
+mkas = [mka1,mka2,mka3,mka4]
 
 #din = DigitalInput(22)
 #ain = AnalogueInput(26)
