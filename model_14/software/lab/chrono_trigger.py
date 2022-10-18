@@ -40,12 +40,13 @@ class ChronoTrigger(EuroPiScript):
         self.clocks.append(Clock(8))
         self.clocks.append(Clock(16))
         self.clocks.append(Clock(32))
-        self.links = [False, False, False, False, False]
+        self.links = [False, False, False, False, False, False]
         self.outputs = [0, 0, 0, 0, 0, 0]
+        self.selected_pair = 0 # up to 5 pairs (6 outputs)
         
 
-        din.handler(self.beat)
-        b1.handler(self.change_mode)
+        din.handler(self.beat) #external clock in signal
+        b1.handler(self.change_link) 
         b2.handler(self.increment_selection)
 
     def reset(self):
@@ -66,25 +67,47 @@ class ChronoTrigger(EuroPiScript):
         self.clocks[3] = mka3.choice(self.clocks[3].DIV_CHOICES)
         self.clocks[4] = mka4.choice(self.clocks[4].DIV_CHOICES)
 
-    def beat(self):
-        """Called when the clock input is triggered"""
-        
-        i_out = 0
-        clk_iter = iter(self.clocks)
-        for clock in clk_iter: 
-            if clock.clock():
-                self.outputs[i_out] = 1
+    def beat(clocks,links):
+        """Called when the clock input is triggered"""    
+        #TODO:  use better var names
+        clk_iter = iter(clocks)
+        links_iter = iter(links)
+
+        out = []
+    
+        for c in clk_iter:        
+            try:
+                l=next(links_iter)                
+            except StopIteration:
+                break
+
+            if c.clock():
+                out.append(1)
+                if(l):
+                    out.extend(beat(clk_iter,links_iter))
             else:
-                self.outputs[i_out] = 0
-            i_out += 1
+                out.append(0)
+                while l:
+                    try:
+                        l=next(links_iter)
+                        next(clk_iter)
+                    except StopIteration:
+                        break
+                    out.append(0)
 
+        return out
+
+    def change_link(self):
+        """Toggles the link"""
+        self.modes[self.selected_lfo] = (self.modes[self.selected_lfo] + 1) % self.MODE_COUNT
+        self.save_state()
+
+    def increment_selection(self):
+        """Move the selection to the next Link"""
+        self.selected_pair = (self.selected_pair + 1) % 5
 
         
-
-
-        
-        
-
+    
     def main(self):
         while True:
             self.read_knobs()
