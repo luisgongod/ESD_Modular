@@ -464,7 +464,11 @@ class Display(SSD1306_I2C):
             y_offset = int((index * 9) + padding_top) - 1
             self.text(content, x_offset, y_offset)
         oled.show()
-
+    
+    def clear(self):
+        """Clear the display."""
+        self.fill(0)
+        self.show()
 
 class Output:
     """A class for sending digital or analogue voltage to an output jack.
@@ -569,6 +573,10 @@ class MuxAnalogueInput():
         self.mux.set_channel(self.channel)        
         return self._analogue_input.read_voltage()
 
+    def choice(self, choices):
+        self._set_channel()
+        return self._analogue_input.choice(choices)
+
 class MuxKnob():
     """
     modified Knob class to work with the mux
@@ -629,32 +637,35 @@ class MuxKnobAnalogInput():
             raise ValueError("Mode not implemented")
     
     def read_position(self,steps=100):
+        position = 0
         if self.mode == "absolute":
-            return clamp(self.analoginput.read_position() + self.knob.read_position(),0,steps)
+            position = clamp(int(self.analoginput.percent()*steps) + self.knob.read_position(steps),0,steps)
         elif self.mode == "average":
-            return (self.analoginput.read_position() + self.knob.read_position())/2
+            position = (int(self.analoginput.percent()*steps) + self.knob.read_position(steps))/2
         elif self.mode == "max":
-            return max(self.analoginput.read_position(), self.knob.read_position())
+            position = max(int(self.analoginput.percent()*steps), self.knob.read_position(steps))
         elif self.mode == "min":
-            return min(self.analoginput.read_position(), self.knob.read_position())
+            position = min(int(self.analoginput.percent()*steps), self.knob.read_position(steps))
         elif self.mode == "modulated":
-            return clamp(self.analoginput.read_position() * self.knob.read_position(),0,steps)
+            position = clamp(int(self.analoginput.percent()*steps) * self.knob.read_position(steps),0,steps)
         else:
             raise ValueError("Mode not implemented")
+
+        return int(position)
     
     def choice(self, choices):
-        if self.mode == "absolute":
-            return choices[clamp(self.analoginput.read_position() + self.knob.read_position(),0,len(choices)-1)]
-        elif self.mode == "average":
-            return choices[int((self.analoginput.read_position() + self.knob.read_position())/2)]
-        elif self.mode == "max":
-            return choices[max(self.analoginput.read_position(), self.knob.read_position())]
-        elif self.mode == "min":
-            return choices[min(self.analoginput.read_position(), self.knob.read_position())]
-        elif self.mode == "modulated":
-            return choices[clamp(self.analoginput.read_position() * self.knob.read_position(),0,len(choices)-1)]
-        else:
-            raise ValueError("Mode not implemented")
+        return choices[self.read_position(len(choices))]
+        # if self.mode == "absolute":
+        # elif self.mode == "average":
+        #     return choices[int((self.analoginput.read_position() + self.knob.read_position())/2)]
+        # elif self.mode == "max":
+        #     return choices[max(self.analoginput.read_position(), self.knob.read_position())]
+        # elif self.mode == "min":
+        #     return choices[min(self.analoginput.read_position(), self.knob.read_position())]
+        # elif self.mode == "modulated":
+        #     return choices[clamp(self.analoginput.read_position() * self.knob.read_position(),0,len(choices)-1)]
+        # else:
+        #     raise ValueError("Mode not implemented")
 
 
 # Define all the I/O using the appropriate class and with the pins used
