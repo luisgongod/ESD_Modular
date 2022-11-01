@@ -19,7 +19,6 @@ class Clock:
     def reset(self):
         self.counter = 0
 
-
 class ChronoTrigger(EuroPiScript):
     
     def __init__(self):
