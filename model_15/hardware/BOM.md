@@ -34,3 +34,4 @@
 | 29 | RASPBERRY-PI-PICO | U13                   | RASPBERRY-PI-PICO                  | 1  |
 | 30 | TL074CDR          | U2                    | SOIC-14_L8.7-W3.9-P1.27-LS6.0-BL   | 1  |
 | 31 | MCP6004T-I/ST     | U7                    | TSSOP-14_L5.0-W4.4-P0.65-LS6.4-BL  | 1  |
+| 32 | 1RWHT     | B1,B2           | ButtonSwitch Caps  | 2 |
