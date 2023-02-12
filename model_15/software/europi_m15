@@ -37,23 +37,10 @@ try:
     from calibration_values import INPUT_CALIBRATION_VALUES, OUTPUT_CALIBRATION_VALUES
 except ImportError:
     # Note: run calibrate.py to get a more precise calibration.
-    INPUT_CALIBRATION_VALUES = [384, 65525]
-    OUTPUT_CALIBRATION_VALUES = [
-        0,
-        6300,
-        12575,
-        19150,
-        25375,
-        31625,
-        38150,
-        44225,
-        50525,
-        56950,
-        63475,
-    ]
-
+    INPUT_CALIBRATION_VALUES=[0, 4712, 11425, 18242, 24927, 31816, 38621, 45291, 52134, 58800, 65229]
+    OUTPUT_CALIBRATION_VALUES=[0, 6550, 12960, 19330, 25700, 32100, 38390, 44700, 51030, 57320, 65540]
+    
 # Pico machine CPU freq.
-# Default pico CPU freq is 125_000_000 (125mHz)
 DEFAULT_CPU_FREQ = 125_000_000
 OVERCLOCKED_CPU_FREQ = 250_000_000
 
