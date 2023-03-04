@@ -126,3 +126,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+yams/230304-143627-uno/src/ESD_Modular.code-workspace
+yams/230304-143627-uno/include/README
+.gitignore
+yams/230304-143627-uno/lib/README
+yams/230304-143627-uno/.vscode/extensions.json
