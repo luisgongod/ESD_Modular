@@ -3,13 +3,13 @@
 //modified to work with arduino ide
 // Notes
 // Np = 2e6 / (16 * Fn)
-#define C (unsigned int)(2000000 / (16*130.81))
-#define D (unsigned int)(2000000 / (16*146.83))
-#define E (unsigned int)(2000000 / (16*164.81))
-#define F (unsigned int)(2000000 / (16*174.61))
-#define G (unsigned int)(2000000 / (16*196.00))
-#define A (unsigned int)(2000000 / (16*220.00))
-#define B (unsigned int)(2000000 / (16*246.94))
+#define C 239
+#define D 213
+#define E 190
+#define F 179
+#define G 159
+#define A 142
+#define B 127
 
 
 unsigned int i;
@@ -20,11 +20,12 @@ void setup()
   //Serial.begin(9600);
 //  Serial.println(result);
 
-  //define A4 as input
-  pinMode(A4, INPUT);
+  
+  pinMode(10, OUTPUT);
 
-  set_ym_clock();
-  set_bus_ctl();
+  ym_init();
+
+  
 
   // reset registers
   for (i=0; i<16; i++) {
@@ -42,28 +43,29 @@ void setup()
 }
 void loop() {
 
-
-      int analogValue = analogRead(A4);
-      //map the analog value to a 16 option range
-      int i = map(analogValue, 0, 1023, 0, 6);
-
-
-
+  //blink led
+  digitalWrite(10, HIGH);
+  delay(300);
+  digitalWrite(10, LOW);
+  delay(300);
 
 
-  
+      // int analogValue = analogRead(A4);
+      // //map the analog value to a 16 option range
+      // int i = map(analogValue, 0, 1023, 0, 6);
 
-      send_data(0, data[i] & 0xff);
-      send_data(1, data[i] >> 8);
-      send_data(2, data[i] >> 1 & 0xff);
-      send_data(3, data[i] >> 9);
-      send_data(4, data[i] >> 2 & 0xff);
-      send_data(5, data[i] >> 10);
-      send_data(7, 0xf8); //mixer on all
-      _delay_ms(200.);
 
-      send_data(7, 0xff); //mixer off all
-      _delay_ms(300.);
+      // send_data(0, data[i] & 0xff);
+      // send_data(1, data[i] >> 8);
+      // send_data(2, data[i] >> 1 & 0xff);
+      // send_data(3, data[i] >> 9);
+      // send_data(4, data[i] >> 2 & 0xff);
+      // send_data(5, data[i] >> 10);
+      // send_data(7, 0xf8); //mixer on all
+      // _delay_ms(200.);
+
+      // send_data(7, 0xff); //mixer off all
+      // _delay_ms(300.);
 
     
   }
