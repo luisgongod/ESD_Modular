@@ -24,12 +24,12 @@ void setup()
   ym_init();
 
   send_data(7, 0xf8); // Only output clear sound
-  send_data(8, 0x0f);
-  send_data(9, 0x0f);
-  send_data(10, 0x0f);
-  send_data(11, 0x0f); //freq of envelope fine
-  send_data(12, 0x0f); //freq of envelope coarse
-  send_data(13, 0x08); //shape of envelope
+  send_data(8, 0x0f); // Volume of envelope Channel A
+  send_data(9, 0x0f);// Volume of envelope Channel B
+  send_data(0xa, 0x0f);// Volume of envelope Channel C
+  send_data(11, 0x82); //freq of envelope fine
+  send_data(12, 0x00); //freq of envelope coarse
+  send_data(13, 0b00001010); //shape of envelope
 
 }
 void loop() {

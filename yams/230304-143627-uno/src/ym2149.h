@@ -29,19 +29,17 @@ void ctl_set_data(void) {
 }
 void ctl_set_inactive(void) {
   PORTB = (PORTB & 0b11111100) /*INACTIVE*/ ;
-  // PORTC = (PORTC & 0xf3) /*INACTIVE*/ ;
 }
 
 void set_data_port(char data) {
-  PORTC = (PORTC & 0xfc) | (data & 0x03); // 2 first bits ont PORTC
-  PORTD = (PORTD & 0x02) | (data & 0xfc); // 6 last bits on PORTD
+  PORTC = (PORTC & 0b11111100) | (data & 0b00000011); // 2 first bits ont PORTC    
+  PORTB = (PORTB & 0b11001111) | ((data & 0b00001100)<<2); // next 2 bits on PORTD
+  PORTD = (PORTD & 0b00001111) | (data & 0b11110000); // 4 last bits on PORTD Original PORTD & 0b00001110, idk why
 }
-
 
 
 void set_address(char addr) {
  
-
   ctl_set_address();
   set_data_port(addr);
   _delay_us(1.); //tAS = 300ns
@@ -65,6 +63,7 @@ void send_data(char addr, char data) {
   set_data(data);
 }
 
+
 void ym_init(void) {
   
   // DDRB = DDRB | B00111111; // All outputs except xtals
@@ -72,13 +71,10 @@ void ym_init(void) {
   // DDRD = DDRD | B11110000; // All outputs except Rx, Tx, Interrupts
 
   // DDRC |= 0b00001100; // Bits 2 and 3 (BC1 and BDIR)
-  DDRB |= 0b00000011; // Bits 0 and 1 (BC1 and BDIR)
-  
+  DDRB |= 0b00000011; // Bits 0 and 1 (BC1 and BDIR)  
   DDRC |= 0b00000011; // Bits 0 and 1 (data)
-  DDRD |= 0b11111100; // Bits 2 to 7  (data)
-
-
-
+  DDRB |= 0b00110000; // Bits 2 and 3 (data)
+  DDRD |= 0b11110000; // Bits 4 to 7  (data)
 
   set_ym_clock();
 
