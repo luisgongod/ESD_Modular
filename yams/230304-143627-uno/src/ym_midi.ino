@@ -20,8 +20,6 @@ void setup()
   //Serial.begin(9600);
 //  Serial.println(result);
 
-  //define A4 as input
-  pinMode(A4, INPUT);
 
   set_ym_clock();
   set_bus_ctl();
@@ -43,16 +41,7 @@ void setup()
 void loop() {
 
 
-      int analogValue = analogRead(A4);
-      //map the analog value to a 16 option range
-      int i = map(analogValue, 0, 1023, 0, 6);
-
-
-
-
-
-  
-
+for(i=0; i<4; i++){
       send_data(0, data[i] & 0xff);
       send_data(1, data[i] >> 8);
       send_data(2, data[i] >> 1 & 0xff);
@@ -62,8 +51,14 @@ void loop() {
       send_data(7, 0xf8); //mixer on all
       _delay_ms(200.);
 
-      send_data(7, 0xff); //mixer off all
+      // send_data(7, 0xff); //mixer off all
       _delay_ms(300.);
+
+
+
+}
+  
+
 
     
   }
