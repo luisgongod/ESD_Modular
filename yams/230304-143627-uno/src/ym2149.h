@@ -1,10 +1,11 @@
 #include <Arduino.h>
-// MSB (PB3) is connected to BDIR
-// LSB (PB2) is connected to BC1
+// 0 is connected to BC1
+// 1 is connected to BDIR
 // +5V is connected to BC2
-#define DATA_READ 0x01
-#define DATA_WRITE 0x02
+#define DATA_WRITE 0x01
+#define DATA_READ 0x02
 #define ADDRESS_MODE 0x03
+#define DATA_INACTIVE 0x00
 
 
 #define CLK_PIN 11                                  // OC2A pin - cannot be changed
@@ -46,13 +47,8 @@ void set_ym_clock(void) {
 void set_address(char addr) {
   // set_data_out();
 
-  PORTB = (PORTB & 0b11111100) | ADDRESS_MODE; //Set BC1 and BDIR to address mode
-
   // PORTC = (PORTC & 0xf3) | ADDRESS_MODE;
-
-
-
-
+  PORTB = (PORTB & 0b11111100) | ADDRESS_MODE; //Set BC1 and BDIR to address mode
 
   // PORTC = (PORTC & 0xfc) | (addr & 0x03); // 0,1 address bits on PORTC
   PORTC = (PORTC & 0b11111100) | (addr & 0b00000011); // 0,1 address bits on PORTC
@@ -60,9 +56,8 @@ void set_address(char addr) {
   // PORTD = (PORTD & 0x02) | (addr & 0xfc); // 6 last bits on PORTD
   PORTB = (PORTB & 0b11001111) | (addr<<2 & 0b00110000); // 2,3 address bits on PORTB
 
-
   _delay_us(1.); //tAS = 300ns
-  PORTB = (PORTB & 0b11111100); //INACTIVE
+  PORTB = (PORTB & 0b11111100) | DATA_INACTIVE ; //INACTIVE
   // PORTC = (PORTC & 0xf3) /*INACTIVE*/ ;
   _delay_us(1.); //tAH = 80ns
 }
@@ -85,7 +80,7 @@ void set_data(char data) {
 
   PORTB = (PORTB & 0b11111100) | DATA_WRITE; //Set BC1 and BDIR to data write mode
   _delay_us(1.); // 300ns < tDW < 10us
-  PORTB = (PORTB & 0b11111100); //INACTIVE
+  PORTB = (PORTB & 0b11111100)|DATA_INACTIVE; //INACTIVE
   _delay_us(1.); // tDH = 80ns
 }
 
@@ -148,8 +143,8 @@ void ym_init(void) {
 
   set_ym_clock();
 
-  send_data(0x07, 0x3f); // Enable all channels
-  send_data(0x08, 0x00); // Disable noise
-  send_data(0x0e, 0x00); // Disable envelope
-  send_data(0x0f, 0x00); // Disable envelope
+  // send_data(0x07, 0x3f); // Enable all channels
+  // send_data(0x08, 0x00); // Disable noise
+  // send_data(0x0e, 0x00); // Disable envelope
+  // send_data(0x0f, 0x00); // Disable envelope
 }
