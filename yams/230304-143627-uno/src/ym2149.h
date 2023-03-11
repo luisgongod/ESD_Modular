@@ -1,11 +1,9 @@
 #include <Arduino.h>
-// MSB (PB3) is connected to BDIR
-// LSB (PB2) is connected to BC1
-// +5V is connected to BC2
+
+// +5V is connected to BC2 and RES 
 #define DATA_READ (0x01)
 #define DATA_WRITE (0x02)
 #define ADDRESS_MODE (0x03)
-
 
 #define CLK_PIN 11                                  // OC2A pin - cannot be changed
 #define CLK_ARDUINO_FREQ 16000000                    // Arduino clock frequency
@@ -31,7 +29,7 @@ void ctl_set_inactive(void) {
   PORTB = (PORTB & 0b11111100) /*INACTIVE*/ ;
 }
 
-void set_data_port(char data) {
+void set_data_at_port(char data) {
   PORTC = (PORTC & 0b11111100) | (data & 0b00000011); // 2 first bits ont PORTC    
   PORTB = (PORTB & 0b11001111) | ((data & 0b00001100)<<2); // next 2 bits on PORTD
   PORTD = (PORTD & 0b00001111) | (data & 0b11110000); // 4 last bits on PORTD Original PORTD & 0b00001110, idk why
@@ -41,7 +39,7 @@ void set_data_port(char data) {
 void set_address(char addr) {
  
   ctl_set_address();
-  set_data_port(addr);
+  set_data_at_port(addr);
   _delay_us(1.); //tAS = 300ns
   ctl_set_inactive();
   _delay_us(1.); //tAH = 80ns
@@ -49,7 +47,7 @@ void set_address(char addr) {
 
 void set_data(char data) {
  
-  set_data_port(data);
+  set_data_at_port(data);
     
   ctl_set_data();
   _delay_us(1.); // 300ns < tDW < 10us  
@@ -63,14 +61,36 @@ void send_data(char addr, char data) {
   set_data(data);
 }
 
+void set_channel(char channel, char volume, uint16_t tone, bool envelope) {
+  //switch case channel
+  switch (channel)
+  {
+  case 0:
+    send_data(0, tone & 0xFF);
+    send_data(1, (tone >> 8) & 0xFF);
+    send_data(8, (envelope << 4) | volume);
+  
+  case 1:
+    send_data(2, tone & 0xFF);
+    send_data(3, (tone >> 8) & 0xFF);
+    send_data(9, (envelope << 4) | volume);
+
+  case 2:
+    send_data(4, tone & 0xFF);
+    send_data(5, (tone >> 8) & 0xFF);
+    send_data(10, (envelope << 4) | volume);
+
+    break;
+  
+  default:
+    break;
+  }
+  
+}
+
 
 void ym_init(void) {
   
-  // DDRB = DDRB | B00111111; // All outputs except xtals
-  // DDRC = DDRC | B00001011; // All outputs except analog input and I2C
-  // DDRD = DDRD | B11110000; // All outputs except Rx, Tx, Interrupts
-
-  // DDRC |= 0b00001100; // Bits 2 and 3 (BC1 and BDIR)
   DDRB |= 0b00000011; // Bits 0 and 1 (BC1 and BDIR)  
   DDRC |= 0b00000011; // Bits 0 and 1 (data)
   DDRB |= 0b00110000; // Bits 2 and 3 (data)
