@@ -21,13 +21,7 @@ void setup()
 //  Serial.println(result);
 
 
-  set_ym_clock();
-  set_bus_ctl();
-
-  // reset registers
-  for (i=0; i<16; i++) {
-    send_data(i, 0);
-  }
+  ym_init();
 
   send_data(7, 0xf8); // Only output clear sound
   send_data(8, 0x0f);
